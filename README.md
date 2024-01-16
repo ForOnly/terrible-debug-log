@@ -15,3 +15,14 @@
 
 
 -   带 LIMIT 和不带 LIMIT 的 ORDER BY 查询可能以不同的顺序返回记录
+
+
+## dubbo
+- Dubbo-Fail to decode request due to:......
+  Service not found:......
+
+  排查原因：
+    1、检查参数是否实现了java.io.Serializable，
+    2、调用的服务提供者依赖包里可能没有对应的类，
+    3、检查两边接口包的版本是否一致，
+    4、检查两边的dubbo所引用的jar是否一致
