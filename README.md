@@ -26,3 +26,9 @@
     2、调用的服务提供者依赖包里可能没有对应的类，
     3、检查两边接口包的版本是否一致，
     4、检查两边的dubbo所引用的jar是否一致
+
+## VUE2
+- vue的<keep-alive>不起作用，导致tab切换时页面的生命周期完成执行，页面数据刷新
+
+  排查原因：
+  由于目前 keep-alive 和 router-view 是强耦合的，而且查看文档和源码不难发现 keep-alive 的 include (opens new window)默认是优先匹配组件的 name ，所以在编写路由 router 和路由对应的 view component 的时候一定要确保 两者的 name 是完全一致的。(切记 name 命名时候尽量保证唯一性 切记不要和某些组件的命名重复了，不然会递归引用最后内存溢出等问题)，页面（组件）的name和路由的name名字要一样
