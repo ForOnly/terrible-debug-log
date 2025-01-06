@@ -32,3 +32,33 @@
 
   排查原因：
   由于目前 keep-alive 和 router-view 是强耦合的，而且查看文档和源码不难发现 keep-alive 的 include (opens new window)默认是优先匹配组件的 name ，所以在编写路由 router 和路由对应的 view component 的时候一定要确保 两者的 name 是完全一致的。(切记 name 命名时候尽量保证唯一性 切记不要和某些组件的命名重复了，不然会递归引用最后内存溢出等问题)，页面（组件）的name和路由的name名字要一样
+
+## Element-UI
+- el-table页面在切换到其他页面再切回来时，会自动将滚动条置顶
+
+  原因：会触发activated，导致表格重新布局，将滚动条置顶
+  解决方案：
+  ```js
+  data(){
+    return {
+      tableScrollTop:0,
+    }
+  },
+  updated() {
+    const {handleTableScroll} = this;
+    this.$nextTick(() => {
+      // 添加事件前需要先移除之前添加的的事件 防止多次触发事件
+      // TODO 可尝试再mounted中绑定事件  但似乎触发了dom更新后会导致事件失效（可尝试使用nextTick和setTimeout结合的方式看是否能解决此问题）
+      this.$refs.singleTable.$el.querySelector('div.el-table__body-wrapper')?.removeEventListener("scroll", handleTableScroll);
+      this.$refs.singleTable.$el.querySelector('div.el-table__body-wrapper')?.addEventListener("scroll", handleTableScroll);
+    })
+  },
+  activated() {
+    const {tableScrollTop} = this
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.$refs.singleTable.$el.querySelector('div.el-table__body-wrapper').scrollTop = tableScrollTop;
+      }, 60)
+    });
+  },
+  ```
